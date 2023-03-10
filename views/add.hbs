@@ -1,0 +1,55 @@
+<a class="my-3" href="/">Quay lại</a>
+<h1 class="text-success">Thêm người dùng</h1>
+<form method="post">
+    <div class="form-group">
+        <label for="name">Tên người dùng</label>
+        <input class="form-control" type="text" name="name" placeholder="Nhập tên người dùng" value="{{data.name}}">
+        {{#if errorName}}
+            <div class="alert alert-danger">{{errorName}}</div>
+        {{/if}}
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input class="form-control" type="email" name="email" placeholder="Nhập email người dùng" value="{{data.email}}">
+        {{#if errorEmail}}
+            <div class="alert alert-danger">{{errorEmail}}</div>
+        {{/if}}
+    </div>
+    <div class="form-group">
+        <label for="gender">Giới tính</label>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="gender" value="male" {{#ifEquals data.gender 'male'}}checked{{/ifEquals}}>
+            <label class="form-check-label" for="gender">Nam</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="gender" value="female" {{#ifEquals data.gender 'female'}}checked{{/ifEquals}}>
+            <label class="form-check-label" for="female">Nữ</label>
+        </div>
+        {{#if errorGender}}
+            <div class="alert alert-danger">{{errorGender}}</div>
+        {{/if}}
+    </div>
+    <div class="form-group">
+        <label for="status">Trạng thái</label>
+        <div class="form-check">
+        <input id="inactive" class="form-check-input" style="display: none;" type="checkbox" name="status" value="inactive" checked>
+        <input id="active" class="form-check-input" type="checkbox" name="status" value="active">
+        <label class="form-check-label" for="status">Hoạt động</label>
+        </div>
+        {{#if errorStatus}}
+            <div class="alert alert-danger">{{errorStatus}}</div>
+        {{/if}}
+    </div>
+    <button type="submit" class="btn btn-success">Thêm người dùng</button>
+</form>
+
+<script>
+    const inactive = document.getElementById('inactive')
+    const active = document.getElementById('active')
+
+    active.addEventListener('change', function(e) {
+        inactive.checked = !inactive.checked
+    })
+
+    {{#ifEquals data.status 'active'}}active.click(){{/ifEquals}}
+</script>

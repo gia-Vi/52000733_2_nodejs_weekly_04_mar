@@ -1,0 +1,89 @@
+<h1 class="text-primary my-3">Danh sách người dùng</h1>
+<a class="btn btn-success" href="/users/add">Thêm người dùng</a>
+<p class="my-2">Chọn một người dùng cụ thể để xem chi tiết</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên người dùng</th>
+            <th>Email</th>
+            <th>Giới tính</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody id="tableBody">{{{list}}}</tbody>
+</table>
+
+<nav aria-label="Page Navigation">
+    <ul class="pagination justify-content-center">
+        {{{page}}}
+    </ul>
+</nav>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="deleteLabel">Xóa người dùng</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc muốn xóa người dùng với email <span id="delProductName" style="font-weight: bold;"></span>?
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" action="#" method="post">
+                    <input type="submit" class="btn btn-danger" value="Xóa">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const tableBody = document.getElementById('tableBody')
+    const delProductName = document.getElementById('delProductName')
+    const deleteForm = document.getElementById('deleteForm')
+
+    {{#if toast}}
+        let success = {{toast.[0]}}
+        let message = '{{toast.[1]}}'
+        
+        if (success) {
+            toastr.success(message)
+        } else {
+            toastr.warning(message)
+        }
+    {{/if}}
+
+    function showDeleteModal(e) {
+        var id = e.target.parentElement.parentElement.dataset.id
+
+        var xhttp = new XMLHttpRequest()
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                if (this.status == 200) {
+                    var response = JSON.parse(this.response)
+                    delProductName.innerText = response.data.email
+                    deleteForm.action = '/users/delete/' + id
+                    console.log(deleteForm)
+                }
+            }
+        };
+
+        xhttp.open('GET', 'https://gorest.co.in/public-api/users/' + id, true)
+        xhttp.setRequestHeader('Authorization', 'Bearer a4cbce9ef1db6d12b1e0c3f26d8532f4bc4cf2633416e444fb0de884f5bbcb41')
+        xhttp.send()
+    }
+
+    tableBody.addEventListener('click', function(e) {
+        if (e.target.parentElement.tagName == 'TR') {
+            let id = e.target.parentElement.dataset.id
+            window.location.replace('/users/' + id)
+        }
+    })
+</script>
+</html>
